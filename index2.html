@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      h2 {
+        text-align: center;
+        color: #004968;
+        font-size: 2rem;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      }
+      .inpDate {
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 6rem;
+        font-size: 1.8rem;
+        border: #002433;
+      }
+      .disp-cont {
+        margin: 0 auto;
+        display: flex;
+        max-width: 720px;
+        flex-direction: row;
+        justify-content: space-evenly;
+      }
+
+      .disp-dte {
+        flex: 0 1 calc(25% - 4rem);
+        padding: 0.5rem;
+        background: linear-gradient(#0f2027, #203a43, #2c5364);
+        color: #ccc;
+        font-size: 3rem;
+        text-align: center;
+        border-radius: 5px;
+        box-shadow: 2px 3px 4px grey;
+      }
+
+      .countdown-text {
+        margin: 2rem auto;
+        text-align: center;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        font-size: 2rem;
+        color: #004968;
+        font-style: oblique;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Find how much time is left for</h2>
+    <input type="datetime-local" class="inpDate" />
+    <div class="disp-cont">
+      <div class="disp-bar"></div>
+      <div class="disp-dte days"></div>
+      <div class="disp-dte hours"></div>
+      <div class="disp-dte mins"></div>
+      <div class="disp-dte secs"></div>
+    </div>
+    <div class="countdown-text"></div>
+    <script>
+      let inpDate = document.querySelector(".inpDate");
+      let countDisp = document.querySelectorAll(".disp-dte");
+      let countText = document.querySelector(".countdown-text");
+      console.log(inpDate);
+      let days, hours, mins, secs;
+      let userSelect = false;
+      let datePick, delta;
+
+      let currentDate = Date.now();
+      let newYear = new Date("1-Jan-2021");
+
+      window.addEventListener("DOMContentLoaded", event => {
+        console.log("DOM Fully loaded and parsed");
+        userSelect = false;
+        countdown();
+      });
+
+      inpDate.addEventListener("change", handleChange);
+
+      function handleChange(evt) {
+        datePick = new Date(evt.target.value);
+        userSelect = true;
+        countdown();
+      }
+
+      function countdown() {
+        setInterval(function() {
+          if (!userSelect) {
+            // console.log("system select");
+            delta = (newYear.getTime() - Date.now()) / 1000;
+            countText.innerHTML = "for new year !!";
+          } else {
+            // console.log("user select", delta);
+            let futureDate = datePick.getTime();
+            delta = Math.abs(futureDate - Date.now()) / 1000;
+            countText.innerHTML = "for a special event !!";
+            userSelect = true;
+          }
+
+          days = Math.floor(delta / 86400);
+          document.querySelector(".days").innerHTML =
+            days + '<span style="font-size:1rem">days</span>';
+
+          delta = delta - days * 86400;
+          hours = Math.floor((delta / 3600) % 24);
+          document.querySelector(".hours").innerHTML =
+            hours + '<span style="font-size:1rem">hours</span>';
+
+          delta -= hours * 3600;
+          mins = Math.floor((delta / 60) % 60);
+          document.querySelector(".mins").innerHTML =
+            mins + '<span style="font-size:1rem">mins</span>';
+
+          delta -= mins * 60;
+          secs = Math.floor(delta % 60);
+          document.querySelector(".secs").innerHTML =
+            secs + '<span style="font-size:1rem">secs</span>';
+        }, 1000);
+      }
+    </script>
+  </body>
+</html>

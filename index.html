@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      .inpDate {
+        display: block;
+        margin: 0 auto;
+        margin-bottom: 6rem;
+        font-size: 1.2rem;
+      }
+      .disp-cont {
+        margin: 0 auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+      }
+
+      .disp-dte {
+        flex: 0 1 calc(25% - 4rem);
+        align-self: center;
+        padding: 0.5rem;
+        /* display: inline-block; */
+        /* margin: 0 auto; */
+        min-width: 4rem;
+        min-height: 4rem;
+        background: linear-gradient(#0f2027, #203a43, #2c5364);
+        color: #ccc;
+        font-size: 3rem;
+        /* text-align: center; */
+        border-radius: 5px;
+        box-shadow: 2px 3px 4px grey;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="datetime-local" class="inpDate" />
+    <div class="disp-cont">
+      <div class="disp-bar"></div>
+      <div class="disp-dte days"></div>
+      <div class="disp-dte hours"></div>
+      <div class="disp-dte mins"></div>
+      <div class="disp-dte secs"></div>
+    </div>
+    <script>
+      let inpDate = document.querySelector(".inpDate");
+      let countDisp = document.querySelectorAll(".disp-dte");
+      console.log(inpDate);
+      let days, hours, mins, secs;
+
+      let currentDate = Date.now();
+      let newYear = new Date("1-Jan-2021");
+      // console.log(newYear.getTime());
+
+      inpDate.addEventListener("change", handleChange);
+
+      function handleChange(evt) {
+        // console.log(evt.target.value);
+        let datePick = new Date(evt.target.value);
+        // console.log(datePick.getTime());
+
+        let futureDate = datePick.getTime();
+
+        // console.log("CD = ", currentDate);
+        // console.log("FD = ", futureDate);
+
+        delta = Math.abs(futureDate - currentDate) / 1000;
+        // console.log(delta);
+
+        countdown(delta);
+      }
+
+      setInterval(function() {
+        countdown((newYear.getTime() - Date.now()) / 1000);
+      }, 1000);
+
+      function countdown(delta) {
+        days = Math.floor(delta / 86400);
+        delta = delta - days * 86400;
+        // console.log("delta = " + delta + ", days = " + days);
+
+        hours = Math.floor((delta / 3600) % 24);
+        delta -= hours * 3600;
+        // console.log("delta = " + delta + ", hours = " + hours);
+
+        mins = Math.floor((delta / 60) % 60);
+        delta -= mins * 60;
+        // console.log("delta = " + delta + ",  mins = " + mins);
+
+        secs = Math.floor(delta % 60);
+        // console.log("delta = " + delta + ",  secs = " + secs);
+
+        countDisp.forEach(entity => {
+          // console.log(entity.classList);
+          let cls = entity.classList;
+          if (cls.contains("days")) {
+            let lblDays = '<span style="font-size:1rem">days</span>';
+            entity.innerHTML = days + lblDays;
+          } else if (cls.contains("hours")) {
+            let lblHrs = '<span style="font-size:1rem">hours</span>';
+            entity.innerHTML = hours + lblHrs;
+          } else if (cls.contains("mins")) {
+            let lblMins = '<span style="font-size:1rem">mins</span>';
+            entity.innerHTML = mins + lblMins;
+          } else {
+            let lblSecs = '<span style="font-size:1rem">secs</span>';
+            entity.innerHTML = secs + lblSecs;
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
